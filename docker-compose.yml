@@ -32,3 +32,16 @@ services:
     # no command section because mysql image auto-magically starts up mysql
     env_file:
       - ./env/dev.env
+
+  web:
+    build:
+      context: ./images
+      dockerfile: WebDevDockerfile
+    # only keep :cached if on MacOS
+    volumes:
+      - ./web:/usr/src/web:cached
+    ports:
+      - 3002:3000
+    env_file:
+      - ./env/webdev.env
+    command: yarn start

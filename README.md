@@ -1,3 +1,12 @@
+# Things to remember
+- `docker-compose build` builds image(s) for each service mentioned in `docker-compose.yml`.
+- `docker-compose build --no-cache --pull` or `docker-compose build --no-cache --pull <service name>` builds image(s) without using the locally cached images.
+- `docker-compose run <service name> <command>` brings up the service i.e.container and executes the command and shutsdown.
+- `docker-compose exec <service name> <command>` brings up the service and executes the command. Use this for `ssh`, `DB login`
+- `docker-compose up -d` brings up ALL the services in daemon mode
+- `docker-compose up -d <service name>` brings up specific service in daemon mode
+- `docker-compose logs -f <service name>` for specific service's logs
+
 # docker-compose.yml
 - To build image run `docker-compose build api`. This command uses yml file; looks under 'services > api' section and proceeds using 'services > api > build'. Then it goes into '/images', builds image using ApiDevDockerfile.
 - To create container run `docker-compose run api lb`. This command will build docker image using section 'services > api > build', start a container and execute `lb` loopback cli.
@@ -25,8 +34,8 @@ api_1  | Web server listening at: http://localhost:3000
 api_1  | Browse your REST API at http://localhost:3000/explorer
 ``` 
 - To see the application in action use port `3001` because above output `http://localhost:3000/explorer` is from inside the container and container port `3000` is mapped to our host port `3001` in docker-compose.yml.
-# Deamon mode the application
-- use `docker-compose up -d` for deamon
+# Daemon mode the application
+- use `docker-compose up -d` for daemon
 # Logs monitor
 - use `docker-compose logs -f`
 - To view a specific service mentioned in docker-compose.yml try `docker-compose logs -f <service name>`
@@ -66,5 +75,8 @@ api_1  | Browse your REST API at http://localhost:3000/explorer
 - -`datasources.json` refers to database `"database": "${MYSQL_DATABASE}"` where `${MYSQL_DATABASE}` is sourced from `/env/dev.env`
 - - Here `${MYSQL_DATABASE}` refers to `devdb` which is a service in docker-compose.yml
 - - Above is reason we are not using DB connection string.
-  
+
+# React app
+- `WebDevDockerfile` defines the container for the React web application
+- `env/webdev.env` mentions the api endpoint `localhost:3001`  
 

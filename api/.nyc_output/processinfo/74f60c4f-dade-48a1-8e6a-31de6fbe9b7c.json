@@ -1,0 +1,1 @@
+{"uuid":"74f60c4f-dade-48a1-8e6a-31de6fbe9b7c","parent":null,"pid":673,"argv":["/usr/local/bin/node","/usr/local/bin/npm","run","test:unit"],"execArgv":[],"cwd":"/usr/src/api","time":1574027826441,"ppid":665,"root":"1f14dc29-c54a-4e87-93f5-5d20b6f37300","coverageFilename":"/usr/src/api/.nyc_output/74f60c4f-dade-48a1-8e6a-31de6fbe9b7c.json","files":[]}

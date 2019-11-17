@@ -8,6 +8,10 @@
   "scripts": {
     "lint": "eslint .",
     "start": "nodemon -L .",
+    "test:unit": "NODE_ENV=test mocha --recursive",
+    "test:unit:watch": "NODE_ENV=test mocha -w --recursive",
+    "test:cover": "nyc -r text-summary npm run test:unit && nyc -r html report",
+    "test": "nyc --check-coverage -r text-summary npm run test:unit",
     "posttest": "yarn lint"
   },
   "dependencies": {
@@ -20,12 +24,16 @@
     "loopback-connector-mysql": "^5.4.2",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^3.0.0",
-    "swagger-ui" : "^3.23.11"
+    "swagger-ui": "^3.23.11"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0"
   },
   "repository": {
     "type": "",
