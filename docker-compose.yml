@@ -1,0 +1,34 @@
+# run docker-compose build api
+# docker-compose uses this yml file, looks under 'services > api' section and proceeds using 'services > api > build'.
+# Then it goes into '/images', builds image using ApiDevDockerfile
+version: '3'
+
+#all our services
+services:
+  api: # 'api' can be named anything
+    # point to the development image
+    build:
+      context: ./images
+      dockerfile: ApiDevDockerfile
+    # only put :cached if on MacOS
+    volumes:
+      - ./api:/usr/src/api:cached #map local /api into container /usr/src/api
+    ports:
+      # machine:container
+      - 3001:3000
+    command: yarn start #command start when container comes up
+    env_file: # allows api container to use db config
+      - ./env/dev.env
+
+  devdb: # service name - this can be named whatever
+    image: mysql:5.7 # no build section as we want to use mysql as it is
+    # enables to keep data local, reset by removing the folder
+    volumes:
+      - ./devdb:/var/lib/mysql
+      - ./env:/etc/mysql/conf.d # maps mysql devdb.cnf so mysql on start-up knows to use cnf
+    ports:
+      # machine:container
+      - 3306:3306
+    # no command section because mysql image auto-magically starts up mysql
+    env_file:
+      - ./env/dev.env

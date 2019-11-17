@@ -1,0 +1,21 @@
+#base-layer of alpine + node
+# node:12.12.0-alpine had issue with adding loopback-connector-mysql
+# FROM node:12.12.0-alpine
+FROM node:10.16.0-alpine
+
+# Needed for loopback-cli
+RUN apk --no-cache update && \
+    apk --no-cache add python make g++
+
+# node is special user comes with Alphine, so docker is started as 'root'
+USER node
+
+ENV NPM_CONFIG_PREFIX=/home/node/.npm_global
+
+ENV PATH=$PATH:/home/node/.npm_global/bin
+
+# nodemon to monitor code changes, restart node server
+RUN yarn global add loopback-cli nodemon
+
+# default container folder
+WORKDIR /usr/src/api
