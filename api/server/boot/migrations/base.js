@@ -2,6 +2,7 @@
 
 // ensure correct server.js file for the migration script
 const path = require('path')
+
 const server = require(path.resolve(__dirname, '../../server.js'))
 const { mysqlDb } = server.dataSources
 

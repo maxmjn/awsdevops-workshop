@@ -1,27 +1,30 @@
+/* eslint-disable no-console */
+
 // Copyright IBM Corp. 2016. All Rights Reserved.
 // Node module: loopback-workspace
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-'use strict';
+'use strict'
 
-var loopback = require('loopback');
-var boot = require('loopback-boot');
+const loopback = require('loopback')
+const boot = require('loopback-boot')
 
-var app = module.exports = loopback();
+const app = loopback()
+module.exports = app
 
-app.start = function() {
+app.start = function serverBootup () {
   // start the web server
-  return app.listen(function() {
-    app.emit('started');
-    var baseUrl = app.get('url').replace(/\/$/, '');
-    console.log('Web server listening at: %s', baseUrl);
+  return app.listen(() => {
+    app.emit('started')
+    const baseUrl = app.get('url').replace(/\/$/, '')
+    console.log('Web server listening at: %s', baseUrl)
     if (app.get('loopback-component-explorer')) {
-      var explorerPath = app.get('loopback-component-explorer').mountPath;
-      console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
+      const explorerPath = app.get('loopback-component-explorer').mountPath
+      console.log('Browse your REST API at %s%s', baseUrl, explorerPath)
     }
-  });
-};
+  })
+}
 
 const bootOptions = {
   appRootDir: __dirname,
