@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App /> Snapshots should render the login form if no user is present 1`] = `
+"<div className=\\"App\\">
+  <form onSubmit={[Function]}>
+    <h1>
+      An Awesome Form on React
+    </h1>
+    <label htmlFor=\\"email\\">
+      <span>
+        Email:
+      </span>
+      <input onChange={[Function]} value=\\"\\" id=\\"email\\" name=\\"email\\" type=\\"email\\" />
+    </label>
+    <br />
+    <label htmlFor=\\"password\\">
+      <span>
+        Password:
+      </span>
+      <input onChange={[Function]} value=\\"\\" id=\\"password\\" name=\\"password\\" type=\\"password\\" />
+    </label>
+    <br />
+    <button type=\\"submit\\">
+      Login
+    </button>
+  </form>
+</div>"
+`;

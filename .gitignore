@@ -19,4 +19,3 @@ node_modules
 npm-debug.log
 devdb/**
 .nyc_output
-web/src/__snapshots__/**
