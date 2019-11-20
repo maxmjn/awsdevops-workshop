@@ -45,3 +45,18 @@ services:
     env_file:
       - ./env/webdev.env
     command: yarn start
+
+  admin-web:
+    build:
+      context: ./images
+      dockerfile: WebDevDockerfile
+    # only keep :cached if on MacOS
+    volumes:
+      - ./admin-web:/usr/src/web:cached
+    ports:
+      - 3003:4200
+    env_file:
+      - ./env/webdev.env
+    command: yarn start --host 0.0.0.0
+    # For REMOTE - if you get a security warning change command to:
+    # command: /bin/sh -c "yarn start --host 0.0.0.0 --publicHost NAMEOFYOURHOST.com"
