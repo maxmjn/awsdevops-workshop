@@ -1,0 +1,115 @@
+version: 2
+
+# reusable block that we can insert elsewhere
+defaults: &defaults
+  # that we're building with an image, not the raw machine
+  docker:
+    - image: jcolemorrison/circleci-node-awscli:latest
+  # the working directory of the CI steps and job
+  working_directory: ~/project
+
+# where we define "jobs" aka, things to be done
+# these are NOT ordered.  We simply define them here.
+jobs:
+
+  # first key is the name of the job
+  install:
+    # insert the reusable settings, so docker and working_directory
+    <<: *defaults
+
+    # define the STEPS that we want to take
+    # these ARE ORDERED
+    steps:
+      # CircleCI helper - checks out the codebase
+      - checkout
+
+      # restore cached node modules if we have any
+      - restore_cache:
+          keys:
+            - node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      # run the install command
+      - run:
+          name: Install
+          command: yarn install
+
+      # save the node_modules after we do an install
+      # also, cache them and give the cache the below key
+      - save_cache:
+          paths:
+            - node_modules
+          key: node_modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      # save what we did in this step and make it available to the next job
+      # by default, what you do doesn't persist, so we have to make it persist
+      # so we just persist our entire current directory in the CI which is:
+      # ~/project
+      # ...
+      # one of the more confusing aspects of CircleCI
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  # test job, should be straight forward
+  test:
+    <<: *defaults
+    steps:
+      # even though we persisted what we did in the previous job
+      # we need to attach it, and here's where and how we do it.
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: yarn test
+
+  # deploy job
+  deploy:
+    <<: *defaults
+    # have to attach again
+    steps:
+      - attach_workspace:
+          at: .
+      # necessary to hook into docker
+      - setup_remote_docker
+
+      # set some environment variables up
+      - run:
+          name: Set ENV Variables
+          # $BASH_ENV is what you add values to that you want made available
+          # in this particular job
+          command: |
+            echo 'export IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/awsdevops/api' >> $BASH_ENV
+      # run the build script
+      - run:
+          name: build image and deploy
+          command: |
+            chmod +x ./deploy.sh
+            ./deploy.sh
+
+# Where we define the actual order of jobs
+workflows:
+  version: 2
+
+  # other than version, the top level is the NAME of workflows
+  test_install_deploy:
+    # other keys here
+    # jobs is how we ORDER the above jobs, define what they require, and create conditions
+    # but we order them via `requires`, not just the array order
+    # etc:
+    # you can run multiple jobs in parallel (add fake step and requires install)
+    # `requires` can require the completion of multiple steps
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - deploy:
+          requires:
+            - test
+          filters:
+            # mention that this is how you'd filter for
+            # production and staging
+            branches:
+              only:
+                - staging
